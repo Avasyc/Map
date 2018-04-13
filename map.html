@@ -1,0 +1,101 @@
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body,
+		html {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+
+		#allmap {
+			width: 100%;
+			height: 100%;
+		}
+
+		#charts {
+			display: none;
+			position: absolute;
+			z-index: 1;
+			left: 25%;
+  			top: 15%;
+		}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
+	<title>给覆盖物注册事件</title>
+</head>
+
+<body>
+	<div>
+		<div id="charts" style="width:1000px; height:500px; background:white;">
+			<div id="history" style="width:500px; height: 500px; float:left;"></div>
+			<div id="realTime" style="width:500px; height: 500px; float:left;"></div>
+		</div>
+		<div id="allmap"></div>
+	</div>
+</body>
+
+</html>
+<script type="text/javascript">
+
+	// 百度地图API功能
+	var map = new BMap.Map("allmap");
+
+	map.centerAndZoom(new BMap.Point(113.397481, 22.534512), 18);
+
+	var marker = new BMap.Marker(new BMap.Point(113.396174, 22.537341)); // 创建点
+	marker.addEventListener("click", attribute);
+	map.addOverlay(marker);    //增加点
+
+	function attribute() {
+		var p = this.getPosition();  //获取marker的位置
+		// alert("marker的位置是" + p.lng + "," + p.lat);
+
+		$("#charts").fadeToggle(1000);
+		$("#charts").css("display", "block");
+		AjaxRequireHistory();
+		AjaxRequireRealTime();
+		setInterval(AjaxRequireRealTime, 5000);
+	}
+
+	function AjaxRequireHistory()
+	{
+		jQuery.ajax({  
+			type:'get',
+			url:'http://localhost:3000/api/history',
+			cache:false,
+			dataType:'json',
+			async:false,
+			success:function(result){
+				CreateHistoryCharts(result);
+			}
+		});
+	}
+
+	function AjaxRequireRealTime()
+	{
+		jQuery.ajax({  
+			type:'get',
+			url:'http://localhost:3000/api/realTime',
+			cache:false,
+			dataType:'json',
+			async:false,
+			success:function(result){
+				CreateRealTimeCharts(result);
+			}
+		});
+	}
+
+	function close() {
+		$("#charts").fadeToggle(1000);
+	}
+
+</script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="echarts.min.js"></script>
+<script type="text/javascript" src="script.js"></script>
