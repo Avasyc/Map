@@ -1,8 +1,8 @@
 # 人流量统计分析
 
 ```
-入口文件: map.html
-Node服务：server---folder
+setup: map.html
+server：node.js
 ```
 
 利用百度地图API实现：
