@@ -40,4 +40,21 @@ router.get('/api/realTime', function(req, res, next) {
   res.end(str);
 });
 
+/* GET home page. */
+router.get('/api/point', function(req, res, next) {
+  var str = `{
+    "data": [
+      [ "岐头餐厅",
+        "113.396174",
+        "22.537341"
+      ],
+      [ "吴文陆图书馆",
+        "113.395356",
+        "22.531891"
+      ]
+    ]
+  }`
+  res.end(str);
+});
+
 module.exports = router;
